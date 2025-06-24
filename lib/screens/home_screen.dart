@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import '../services/api_service.dart';
-import '../services/websocket_service.dart';
+import '../core/services/api_service.dart';
+import '../core/services/websocket_service.dart';
 import '../widgets/notification_widget.dart';
 
 class HomeScreen extends StatefulWidget {
