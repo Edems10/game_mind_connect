@@ -4,7 +4,7 @@ import '../../core/services/game_data_manager.dart';
 
 class GameMapWidget extends StatefulWidget {
   final GameDataManager gameDataManager;
-  const GameMapWidget({Key? key, required this.gameDataManager}) : super(key: key);
+  const GameMapWidget({super.key, required this.gameDataManager});
 
   @override
   State<GameMapWidget> createState() => _GameMapWidgetState();
@@ -184,7 +184,7 @@ class _GameMapWidgetState extends State<GameMapWidget> {
 
         // Game Map
         Expanded(
-          child: Container(
+          child: SizedBox(
             width: 800,
             height: 800,
             child: Stack(
@@ -196,7 +196,7 @@ class _GameMapWidgetState extends State<GameMapWidget> {
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black),
                     image: const DecorationImage(
-                      image: AssetImage('7.33.webp'),
+                      image: AssetImage('assets/map/dota_map.webp'),
                       fit: BoxFit.cover,
                     ),
                   ),
