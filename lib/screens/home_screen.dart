@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import '../core/services/api_service.dart';
-import '../core/services/websocket_service.dart';
+import '../core/services/game_data_manager.dart';
 import '../widgets/notification_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,7 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String _notification = '';
   String? _matchId;
   String _wsMessage = '';
-  final WebSocketService _webSocketService = WebSocketService();
+  final GameDataManager _gameDataManager = GameDataManager();
 
   Future<void> selectRoster(int userId, List<int> selectedGameMinds) async {
     try {
@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void joinWebSocket() {
+  Future<void> joinWebSocket() async {
     if (_matchId == null) {
       setState(() {
         _notification = 'No match_id available. Join lobby first!';
@@ -63,19 +63,23 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
     
-    _webSocketService.connect(_matchId!);
-    _webSocketService.stream.listen(
-      (message) => setState(() => _wsMessage = message),
-      onError: (error) => setState(() => _wsMessage = 'WebSocket error: $error'),
-      onDone: () => setState(() => _wsMessage = 'WebSocket connection closed'),
-    );
-
-    setState(() => _notification = 'WebSocket connected to match $_matchId');
+    try {
+      await _gameDataManager.connectWebSocket('dummy_url');
+      setState(() {
+        _notification = 'Dummy data loaded successfully for match $_matchId';
+        _wsMessage = 'Connected to dummy data stream';
+      });
+    } catch (e) {
+      setState(() {
+        _notification = 'Failed to load dummy data: $e';
+        _wsMessage = 'Error: $e';
+      });
+    }
   }
 
   @override
   void dispose() {
-    _webSocketService.disconnect();
+    _gameDataManager.disconnect();
     super.dispose();
   }
 
@@ -111,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: joinWebSocket,
-              child: const Text('Join WebSocket'),
+              child: const Text('Load Dummy Data'),
             ),
             const SizedBox(height: 30),
             NotificationWidget(message: _notification),

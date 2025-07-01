@@ -52,5 +52,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/minimap_icons/
     - assets/map/
+    - assets/dummy_data.json
+    - assets/LightRook.webp
 

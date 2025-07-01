@@ -39,18 +39,23 @@ class _GameMapScreenState extends State<GameMapScreen> {
   }
 
   // Connect to WebSocket using matchId
-  void connectToWebSocket() {
+  Future<void> connectToWebSocket() async {
     if (_matchId == null) {
       setState(() {
         _notification = 'No match_id available. Join match first!';
       });
       return;
     }
-    final wsUrl = 'wss://game-mind-api-959217497496.europe-west1.run.app/match/ws/$_matchId';
-    _gameDataManager.connectWebSocket(wsUrl);
-    setState(() {
-      _notification = 'WebSocket connected to match $_matchId';
-    });
+    try {
+      await _gameDataManager.connectWebSocket('dummy_url');
+      setState(() {
+        _notification = 'Dummy data loaded successfully for match $_matchId';
+      });
+    } catch (e) {
+      setState(() {
+        _notification = 'Failed to load dummy data: $e';
+      });
+    }
   }
 
   @override
@@ -90,7 +95,7 @@ class _GameMapScreenState extends State<GameMapScreen> {
                 ),
                 ElevatedButton(
                   onPressed: connectToWebSocket,
-                  child: const Text('Connect to WebSocket'),
+                  child: const Text('Load Dummy Data'),
                 ),
               ],
             ),
